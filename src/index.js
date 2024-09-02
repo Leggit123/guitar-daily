@@ -1,8 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
+import './index.css'; // Import global styles, including font family
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+
+// Optionally import Inter font if installed via npm
+import '@fontsource/inter/400.css';
+import '@fontsource/inter/600.css';
+import '@fontsource/inter/700.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
