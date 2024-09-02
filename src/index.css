@@ -12,11 +12,16 @@ body {
   background-color: #212121;
 }
 
-/* Specific styling to override overflow for DashboardPage */
 .dashboard-page {
-  overflow: auto; /* Allow scrolling */
-  height: 100%; /* Full height to make the scroll work */
-  padding-bottom: 16px; /* Space at bottom */
+  overflow-y: auto; /* Enable vertical scrolling only */
+  min-height: 100vh; /* Full height for the viewport */
+  display: flex; /* Flexbox to align children vertically */
+  flex-direction: column; /* Align children in a column */
+  align-items: center; /* Center children horizontally */
+  justify-content: flex-start; /* Align children at the top */
+  background-color: #212121; /* Background color */
+  padding-top: 0;
+  margin-top: 0;
 }
 
 /* Scrollable card for tasks on DashboardPage */

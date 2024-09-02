@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import ChordButton from '../components/ChordButton';
 import SelectableButton from '../components/SelectableButton';
 import WideCard from '../components/WideCard';
+import LazyImage from '../components/LazyImage'; // Ensure this import is at the top
 
 
 const chordOptions = {
@@ -78,67 +79,55 @@ const chordOptions = {
 
 const ChordsPage = () => {
   const [selectedCategory, setSelectedCategory] = useState("Basic Chords");
-  const [selectedChord, setSelectedChord] = useState("A Major"); 
+  const [selectedChord, setSelectedChord] = useState("A Major");
   const [selectedImage, setSelectedImage] = useState(null);
-  const [imageCache, setImageCache] = useState({}); 
-
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const preloadImages = async () => {
-      const cache = {};
-      for (const category in chordOptions) {
-        for (const chord of chordOptions[category]) {
-          const imageModule = await chord.image();
-          cache[chord.name] = imageModule.default; 
-        }
-      }
-      setImageCache(cache); 
+    const loadImage = async () => {
+      setLoading(true);
+      const imageModule = await chordOptions["Basic Chords"][0].image();
+      setSelectedImage(imageModule.default);
+      setLoading(false);
     };
 
-    preloadImages();
+    loadImage();
   }, []);
-
-  
-  useEffect(() => {
-    if (imageCache["A Major"]) {
-      setSelectedImage(imageCache["A Major"]);
-    }
-  }, [imageCache]);
 
   const handleCategoryChange = (category) => {
     setSelectedCategory(category);
     const defaultChord = chordOptions[category][0];
-    setSelectedChord(defaultChord.name);
-    if (imageCache[defaultChord.name]) {
-      setSelectedImage(imageCache[defaultChord.name]);
-    }
+    handleChordChange(defaultChord);
   };
 
-  const handleChordChange = (chord) => {
+  const handleChordChange = async (chord) => {
     setSelectedChord(chord.name);
-    if (imageCache[chord.name]) {
-      setSelectedImage(imageCache[chord.name]);
-    }
+    setLoading(true);
+    const imageModule = await chord.image();
+    setSelectedImage(imageModule.default);
+    setLoading(false);
   };
 
   return (
     <div className="min-h-screen bg-[#212121] text-white p-4">
-      <WideCard className="mb-6">
+      {/* Set a fixed width and max-width to ensure the card size is controlled */}
+      <WideCard>
         <h1 className="text-3xl font-bold mb-4 text-center">Chord Directory</h1>
 
         {/* Image Display */}
-        <div className="flex justify-center mb-8">
-          {selectedImage ? (
-            <img src={selectedImage} alt="Chord Diagram" className="w-full max-w-4xl rounded-lg" />
-          ) : (
+        <div className="flex justify-center items-center mb-8" style={{ height: '300px' }}>
+          {loading ? (
             <p>Loading...</p>
+          ) : (
+            <Suspense fallback={<p>Loading Image...</p>}>
+              <LazyImage src={selectedImage} alt="Chord Diagram" className="w-full max-w-4xl rounded-lg" />
+            </Suspense>
           )}
         </div>
       </WideCard>
 
       {/* Category Selector */}
       <div className="flex flex-wrap justify-center mb-4">
-        
         <div className="flex space-x-4 mb-4 justify-center w-full">
           <ChordButton
             onClick={() => handleCategoryChange("Basic Chords")}
@@ -176,7 +165,7 @@ const ChordsPage = () => {
           <div key={index} style={{ margin: '4px' }}>
             <SelectableButton
               onClick={() => handleChordChange(chord)}
-              isSelected={selectedChord === chord.name} 
+              isSelected={selectedChord === chord.name}
             >
               {chord.name}
             </SelectableButton>

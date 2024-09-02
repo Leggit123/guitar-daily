@@ -84,12 +84,13 @@ const DashboardPage = () => {
   };
 
   return (
-    <div className="dashboard-page" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start', minHeight: '100vh', backgroundColor: '#212121', color: 'white', paddingTop: '1rem' }}>
+    <div className="dashboard-page" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start', minHeight: '100vh', backgroundColor: '#212121', color: 'white' }}>
       
+      {/* Practice Schedule Card */}
       <Card>
         <h2 style={{ color: 'white', fontSize: '2rem', fontWeight: 'bold', marginBottom: '1rem', textAlign: 'center' }}>Practice Schedule</h2> {/* Centered title */}
         
-       
+        {/* Form Field Below Heading */}
         <FormField 
           type="text" 
           value={task}
@@ -97,8 +98,8 @@ const DashboardPage = () => {
           placeholder="e.g. Pentatonic Scale in A Minor"  
           className='mb-4'
         />
-
-       
+  
+        {/* Minutes Selector Dropdown Below FormField */}
         <CustomDropdown 
           options={[
             { label: 'Select Duration (Optional)', value: '' },
@@ -113,21 +114,21 @@ const DashboardPage = () => {
           selectedValue={selectedDuration}
           onChange={setSelectedDuration}  
         />
-
-        
+  
+        {/* Add Task Button */}
         <WideButton onClick={handleAddTask}>
           Add Task
         </WideButton>
       </Card>
-
-     
+  
+      {/* Buttons for Navigation */}
       <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginTop: '1.5rem', width: '100%', maxWidth: '800px' }}>
         <Button onClick={() => navigate('/chords')}>Chords</Button>
         <Button onClick={() => navigate('/metronome')}>Metronome</Button>
         <Button onClick={() => navigate('/scales')}>Scales</Button>
       </div>
-
-     
+  
+      {/* Task List Card - Fixed Height with Scrollable Content */}
       {tasks.length > 0 && (
         <Card
           className="mt-6 scrollable-task-list"
@@ -171,6 +172,5 @@ const DashboardPage = () => {
       )}
     </div>
   );
-};
-
+};  
 export default DashboardPage;
